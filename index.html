@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Calculator</title>
+    <style>
+        /* Add your CSS styling here */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #calculator {
+            width: 300px;
+        }
+        input, button {
+            margin: 5px;
+            height: 30px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <input type="number" id="number1" placeholder="Number 1">
+        <input type="number" id="number2" placeholder="Number 2">
+        <button onclick="calculate('add')">Add</button>
+        <button onclick="calculate('subtract')">Subtract</button>
+        <button onclick="calculate('multiply')">Multiply</button>
+        <button onclick="calculate('divide')">Divide</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Add your JavaScript here
+        function calculate(operation) {
+            var number1 = parseFloat(document.getElementById('number1').value);
+            var number2 = parseFloat(document.getElementById('number2').value);
+
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ operation, number1, number2 }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Result: ' + data.result;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
