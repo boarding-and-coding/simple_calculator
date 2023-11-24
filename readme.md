@@ -96,12 +96,3 @@ Push to GitHub:
 
 git push -u origin master
 
-Additional Notes
-
-Customize your app by adding more features or improving the UI.
-
-Make sure to test each part thoroughly after development.
-
-Regularly commit your changes to GitHub to keep track of your project's progress.
-
-This guide provides a comprehensive overview of creating a basic calculator app with Node.js, deploying it using Docker, and managing your code with Git and GitHub.
