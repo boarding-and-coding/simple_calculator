@@ -99,6 +99,7 @@ Push to GitHub:
 bash
 Copy code
 git push -u origin master
+
 Additional Notes
 Customize your app by adding more features or improving the UI.
 Make sure to test each part thoroughly after development.
