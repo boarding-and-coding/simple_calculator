@@ -1,6 +1,7 @@
 # Building a Node.js Calculator App with HTML UI
 
 1. Setting Up the Node.js Environment
+
 Install Node.js: Download and install Node.js from the official website.
 
 Create a Project Directory:
@@ -14,7 +15,9 @@ Initialize npm:
 bash
 Copy code
 npm init -y
+
 2. Creating the Node.js Calculator App with HTML UI
+
 Create index.js:
 This is your main server file. Include the necessary code to create a basic web server and define the /calculate endpoint for your calculator operations.
 
@@ -27,6 +30,7 @@ Create index.html:
 This file will contain the HTML structure for your calculator UI. Include inputs for numbers, buttons for operations, and a script to handle button clicks and make requests to your server.
 
 3. Containerizing the Application
+
 Create a Dockerfile:
 This file is used to build a Docker container for your app.
 Dockerfile
@@ -38,7 +42,9 @@ RUN npm install
 COPY . .
 EXPOSE 3000
 CMD ["node", "index.js"]
+
 4. Testing the Application Locally
+
 Run Node.js Server:
 
 bash
@@ -57,7 +63,9 @@ bash
 Copy code
 docker run -p 3000:3000 my-calculator-app
 Access http://localhost:3000 to interact with the application running inside the Docker container.
+
 5. Creating a GitHub Repository and Pushing the Code
+
 Initialize Git Repository:
 In your project directory:
 
