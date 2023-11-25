@@ -301,4 +301,5 @@ git push origin master
 Test the Trigger:
 
 Make a change in your repository and push it to the master branch.
+
 This should trigger a new build, and if configured correctly, your app should be built and deployed to Cloud Run.
