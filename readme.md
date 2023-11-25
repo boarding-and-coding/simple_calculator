@@ -141,6 +141,7 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 EXPOSE 3000
+ENV PORT=3000
 CMD ["node", "index.js"]
 ```
 
@@ -223,7 +224,9 @@ Enable the Cloud Build API and the Cloud Run API
 
 Edit Cloud Build Service Account:
 
-Navigate to "Cloud Build" > "Settings" here you will see the service account used to run builds. Remember the email address of that service account.
+Navigate to "Cloud Build" > "Settings" here you will see the service account used to run builds.
+
+Enable the "Cloud Run Admin" and "Service Account User" roles.
 
 Navigate to "IAM & Admin" > "IAM"
 
@@ -282,7 +285,7 @@ steps:
 # Deploy the container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'YOUR_SERVICE_NAME', '--image', 'gcr.io/$PROJECT_ID/YOUR_SERVICE_NAME', '--region', 'YOUR_REGION', '--platform', 'managed']
+  args: ['run', 'deploy', 'YOUR_SERVICE_NAME', '--image', 'gcr.io/$PROJECT_ID/YOUR_SERVICE_NAME', '--region', 'YOUR_REGION', '--platform', 'managed', '--allow-unauthenticated']
 timeout: '1600s'
 ```
 
