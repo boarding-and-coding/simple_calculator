@@ -221,7 +221,23 @@ Navigate to "APIs & Services" > "Dashboard" in the GCP Console.
 
 Enable the Cloud Build API and the Cloud Run API
 
-Finally, go to "Cloud Build" > "Settings" here you will see the service account used to run builds. Change the Cloud Run Admin role to "Enabled".
+Edit Cloud Build Service Account:
+
+Navigate to "Cloud Build" > "Settings" here you will see the service account used to run builds. Remember the email address of that service account.
+
+Navigate to "IAM & Admin" > "IAM"
+
+Locate the Cloud Build service account, click the pencil/edit icon next to it to modify its roles.
+
+Click "Add Another Role".
+
+Search for and select the "Service Account User" role.
+
+Click "Add Another Role".
+
+Search for and select the "Cloud Run Admin" role.
+
+Save the changes.
 
 ### 2. Creating a Cloud Build Trigger for Google Cloud Run
 
