@@ -197,7 +197,7 @@ Push to GitHub:
 
 ```git push -u origin master```
 
-## Level 2 - Create CI/CD Pipeline to GCS Bucket
+## Level 2 - Create CI/CD Pipeline to GCP Cloud Run
 
 ### 1. Set Up a Google Cloud Platform (GCP) Project
 
@@ -219,83 +219,68 @@ Enable Required APIs:
 
 Navigate to "APIs & Services" > "Dashboard" in the GCP Console.
 
-Enable the Cloud Build API and Cloud Storage API.
+Enable the Cloud Build API and the Cloud Run API
 
-### 2. Create a Google Cloud Storage Bucket
+### 2. Creating a Cloud Build Trigger for Google Cloud Run
 
-Open Cloud Storage: In the GCP Console, navigate to "Storage" > "Browser".
+Open Cloud Build:
 
-Create a Bucket:
+Go to "Cloud Build" > "Triggers"
 
-Click "Create bucket".
+Connect Your Repository:
 
-Enter a unique bucket name. (I always use the project's project ID)
+Click "Connect Repository"
 
-Choose a default storage class and location for your bucket.
+Choose GitHub (or the relevant source) and select your repository.
 
-Click "Create".
+Create a New Build Trigger for Cloud Run:
 
-### 3. Set Up Cloud Build
+Click "Create Trigger".
 
-Open Cloud Build: In the GCP Console, go to "Cloud Build" > "Triggers".
+Enter the trigger name and description
 
-Connect Repository:
+Select the event (e.g., push to a branch)
 
-Click "Connect Repository".
+Choose the source repository and branch (e.g., master)
 
-Choose GitHub (or another source if your repository is elsewhere).
+Under "Build Configuration", select "Cloud Build configuration file (yaml or json)"
 
-Authenticate and select the repository you want to connect.
+Enter the location of your build configuration file (usually cloudbuild.yaml)
 
-Create a Build Trigger:
+Update/Create cloudbuild.yaml:
 
-After connecting your repository, create a new trigger.
+Modify your cloudbuild.yaml to include steps for building and deploying to Cloud Run.
 
-Configure the trigger to build on changes to the master branch.
-
-### 4. Create a Build Configuration File
-
-Create cloudbuild.yaml in Your Repository:
-
-In your project's root directory, create a file named cloudbuild.yaml.
-
-This file will define the build steps and actions to be performed.
-
-Define Build Steps in cloudbuild.yaml:
-
-Specify steps to build your application (if necessary) and copy files to the GCS bucket.
-
-Example of copying files to a bucket:
+Example configuration:
 
 ```yaml
 steps:
-
-- name: 'gcr.io/cloud-builders/gsutil'
-
-  args: ['cp', '-r', '.', 'gs://YOUR_BUCKET_NAME']
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/YOUR_SERVICE_NAME', '.']
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/YOUR_SERVICE_NAME']
+# Deploy the container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'YOUR_SERVICE_NAME', '--image', 'gcr.io/$PROJECT_ID/YOUR_SERVICE_NAME', '--region', 'YOUR_REGION', '--platform', 'managed']
+timeout: '1600s'
 ```
 
-Replace YOUR_BUCKET_NAME with the name of your GCS bucket.
+Replace YOUR_SERVICE_NAME with the name of your Cloud Run service and YOUR_REGION with your desired region.
 
-### 5. Push cloudbuild.yaml to Your Repository
+Push the Updated cloudbuild.yaml:
 
-Commit cloudbuild.yaml to your repository and push it to GitHub:
+Commit and push the updated cloudbuild.yaml to your repository:
 
 ```bash
 git add cloudbuild.yaml
-
-git commit -m "Add Cloud Build configuration"
-
-git push origin master 
+git commit -m "Update Cloud Build configuration for Cloud Run"
+git push origin master
 ```
 
-### 6. Test Your Pipeline
+Test the Trigger:
 
-Make a change to your repository and push it to the master branch.
-
-Cloud Build should trigger a build and execute the steps defined in cloudbuild.yaml.
-
-Notes
-You might need to configure permissions and service account roles in GCP for Cloud Build to access GCS.
-Ensure you understand the costs associated with GCP services used in your pipeline.
-This setup will create a basic CI/CD pipeline that deploys your code to a GCS bucket whenever you push to the master branch. You can expand and customize this pipeline based on your specific requirements.
+Make a change in your repository and push it to the master branch.
+This should trigger a new build, and if configured correctly, your app should be built and deployed to Cloud Run.
