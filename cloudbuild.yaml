@@ -1,3 +1,12 @@
 steps:
-- name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', '-r', '.', 'gs://calculator-406120']
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/calculator', '.']
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/calculator']
+# Deploy the container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'calculator', '--image', 'gcr.io/$PROJECT_ID/calculator', '--region', 'us-central1-a', '--platform', 'managed']
+timeout: '1600s'
